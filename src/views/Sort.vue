@@ -19,24 +19,24 @@
                                 <b-dropdown split :text="selectedAlgo" slot="append"
                                             @click="sortInput(selectedAlgo, 'random')"
                                             variant="outline-success">
-                                    <template v-for="algo in algoTypes">
+                                    <!--<template v-for="algo in algoTypes">
                                         <b-dropdown-item @click="changeDropdownText(algo)">{{algo}}</b-dropdown-item>
-                                    </template>
+                                    </template>-->
                                 </b-dropdown>
                             </b-button-group>
                             <!--<b-btn variant="outline-success" slot="append" @click="sortInput()">Run</b-btn>-->
                         </b-input-group>
                         <b-input-group v-else>
                             <!--<b-form-select v-model="selectedAlgo" :options="algoTypes" class="m-md-2"></b-form-select>-->
-                            <b-form-input v-model="inputNums" type="text"
+                            <b-form-input v-model="workingInput" type="text"
                                           placeholder="Enter a list of numbers separated by commas or space"
                             ></b-form-input>
                             <b-dropdown split :text="selectedAlgo" slot="append"
                                         @click="sortInput(selectedAlgo, 'user')"
                                         variant="outline-success">
-                                <template v-for="algo in algoTypes">
+                                <!--<template v-for="algo in algoTypes">
                                     <b-dropdown-item @click="changeDropdownText(algo)">{{algo}}</b-dropdown-item>
-                                </template>
+                                </template>-->
                             </b-dropdown>
                         </b-input-group>
                     </b-card>
@@ -53,16 +53,30 @@
         <b-row aligh-v="start" v-if="showOutput">
             <b-col>
                 <b-card title="Input Elements">
-                    <bars :data="inputNums" :gradient="['#6fa8dc', '#42b983']" :barWidth="5"
-                          :growDuration="2"></bars>
+                    <column-chart :data="barGraphInput" :stacked="true"></column-chart>
                 </b-card>
             </b-col>
         </b-row>
         <b-row aligh-v="start" v-if="showOutput">
             <b-col>
-                <b-card title="Output(Sorted) Elements">
-                    <bars :data="outputNums" :gradient="['#6fa8dc', '#42b983']" :barWidth="5"
-                          :growDuration="2"></bars>
+                <b-card :title="bubble">
+                    <column-chart :data="bubbleOutput" :stacked="true"></column-chart>
+                </b-card>
+            </b-col>
+            <b-col>
+                <b-card :title="selection">
+                    <column-chart :data="selectionOutput" :stacked="true"></column-chart>
+                </b-card>
+            </b-col>
+            <div class="w-100"></div>
+            <b-col>
+                <b-card :title="insertion">
+                    <column-chart :data="insertionOutput" :stacked="true"></column-chart>
+                </b-card>
+            </b-col>
+            <b-col>
+                <b-card :title="merge">
+                    <column-chart :data="mergeOutput" :stacked="true"></column-chart>
                 </b-card>
             </b-col>
         </b-row>
@@ -71,21 +85,32 @@
 
 <script>
     import AlgoTypeMappings from '../constants.js'
+    import SortingObject from '../sorting.js'
 
     export default {
         data() {
             return {
                 name: 'Sort',
                 algoTypes: this.getAlgoTypes(),
-                inputNums: '',
-                outputNums: '',
+                barGraphInput: '',
+                barGraphOutput: '',
+                workingInput: '',
                 error: '',
                 ERROR: "Please enter the correct input",
                 SELECT_ERROR: 'Please select an algorithm',
-                selectedAlgo: 'Please select an algorithm',
+                selectedAlgo: 'Run Sorting',
                 isRandom: true,
                 showOutput: false,
-                myToggle: false
+                myToggle: false,
+                merge: "Merge Sort",
+                insertion: "Insertion Sort",
+                selection: "Selection Sort",
+                bubble: "Bubble Sort",
+                mergeOutput: [],
+                selectionOutput: [],
+                insertionOutput: [],
+                bubbleOutput: [],
+                barWidth: 4
             }
         },
         methods: {
@@ -95,16 +120,18 @@
                     return;
                 }
                 if (source === "random") {
-                    this.outputNums = this.inputNums;
+                    this.barGraphInput = this.formatOutput(this.workingInput);
+                    this.performSort(this.workingInput, null);
                     this.showOutput = true;
                     this.error = '';
                 } else {
-                    if (this.inputNums === '') {
+                    if (this.workingInput === '') {
                         this.error = this.ERROR;
                     } else {
                         try {
-                            this.outputNums = this.inputNums.split(/[ ,]+/).filter(Boolean).map(Number);
-                            this.inputNums = this.outputNums;
+                            this.workingInput = this.workingInput.split(/[ ,]+/).filter(Boolean).map(Number);
+                            this.barGraphInput = this.formatOutput(this.workingInput);
+                            this.performSort(this.workingInput, null);
                             this.showOutput = true;
                             this.error = ''
                         } catch (e) {
@@ -129,17 +156,33 @@
             },
             generateRandomData: function (inputSize) {
                 this.showOutput = false;
-                this.inputNums = [];
+                this.workingInput = [];
                 for (let i = inputSize; i > 0; i--) {
-                    this.inputNums.push((Math.floor(Math.random() * 1000) + 10));
+                    this.workingInput.push((Math.floor(Math.random() * 1000) + 100));
                 }
             },
             toggleRandom: function (state) {
                 this.showOutput = false;
-                this.inputNums = '';
-                this.outputNums = '';
+                this.workingInput = '';
                 this.error = '';
                 this.isRandom = state;
+            },
+            formatOutput: function (data) {
+                let aux = {};
+                for (let i = 0; i < data.length; i++) {
+                    aux[(i + 1).toString()] = data[i];
+                }
+                return aux;
+            },
+            performSort: function (data, type) {
+                if (type === null) { // perform all sorts
+                    this.bubbleOutput = this.formatOutput(SortingObject.bubbleSort(data.slice(0)));
+                    this.selectionOutput = this.formatOutput(SortingObject.selectionSort(data.slice(0)));
+                    this.mergeOutput = this.formatOutput(SortingObject.mergeSort(data.slice(0)));
+                    this.insertionOutput = this.formatOutput(SortingObject.insertionSort(data.slice(0)));
+                } else { // perform a single type of sort
+                    console.log("Single sort");
+                }
             }
         },
     }
