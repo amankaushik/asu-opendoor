@@ -13,3 +13,15 @@
         <router-view/>
     </div>
 </template>
+<style>
+   .nav {
+       font-family: 'Avenir', Helvetica, Arial, sans-serif;
+       font-size: 16px;
+   }
+</style>
+<script>
+    import Landing from "@/views/Landing";
+    export default {
+        components: {Landing}
+    }
+</script>

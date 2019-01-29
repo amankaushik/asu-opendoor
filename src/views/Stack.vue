@@ -1,10 +1,10 @@
 <template>
-    <b-container fluid>
+    <b-container fluid class="stack">
     </b-container>
 </template>
 
 <script>
     export default {
-        name: 'Stack'
+        name: 'stack'
     }
 </script>

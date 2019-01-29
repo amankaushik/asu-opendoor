@@ -1,5 +1,5 @@
 <template>
-    <b-container class="bv-example-row bv-example-row-flex-cols">
+    <b-container class="bv-example-row bv-example-row-flex-cols sort">
         <b-row aligh-v="start">
             <b-col>
                 <b-button v-b-toggle.collapse1 variant="primary" class="m-1" @click="toggleRandom(true)">Use Random data
@@ -9,35 +9,29 @@
                 <b-collapse id="collapse1" class="mt-2">
                     <b-card>
                         <b-input-group v-if="isRandom">
-                            <b-button-group>
-                                <b-button @click="generateRandomData(10)" :pressed.sync="myToggle">10 Elements
+                            <b-col>
+                                <b-button-group>
+                                    <b-button @click="generateRandomData(10)" :pressed.sync="myToggle">10 Elements
+                                    </b-button>
+                                    <b-button @click="generateRandomData(20)" :pressed.sync="myToggle">20 Elements
+                                    </b-button>
+                                    <b-button @click="generateRandomData(50)" :pressed.sync="myToggle">50 Elements
+                                    </b-button>
+                                </b-button-group>
+                            </b-col>
+                            <b-col md="auto">
+                                <b-button @click="sortInput(selectedAlgo, 'random')"
+                                          variant="outline-success">{{selectedAlgo}}
                                 </b-button>
-                                <b-button @click="generateRandomData(20)" :pressed.sync="myToggle">20 Elements
-                                </b-button>
-                                <b-button @click="generateRandomData(50)" :pressed.sync="myToggle">50 Elements
-                                </b-button>
-                                <b-dropdown split :text="selectedAlgo" slot="append"
-                                            @click="sortInput(selectedAlgo, 'random')"
-                                            variant="outline-success">
-                                    <!--<template v-for="algo in algoTypes">
-                                        <b-dropdown-item @click="changeDropdownText(algo)">{{algo}}</b-dropdown-item>
-                                    </template>-->
-                                </b-dropdown>
-                            </b-button-group>
-                            <!--<b-btn variant="outline-success" slot="append" @click="sortInput()">Run</b-btn>-->
+                            </b-col>
                         </b-input-group>
                         <b-input-group v-else>
-                            <!--<b-form-select v-model="selectedAlgo" :options="algoTypes" class="m-md-2"></b-form-select>-->
                             <b-form-input v-model="workingInput" type="text"
                                           placeholder="Enter a list of numbers separated by commas or space"
                             ></b-form-input>
-                            <b-dropdown split :text="selectedAlgo" slot="append"
-                                        @click="sortInput(selectedAlgo, 'user')"
-                                        variant="outline-success">
-                                <!--<template v-for="algo in algoTypes">
-                                    <b-dropdown-item @click="changeDropdownText(algo)">{{algo}}</b-dropdown-item>
-                                </template>-->
-                            </b-dropdown>
+                            <b-button @click="sortInput(selectedAlgo, 'user')"
+                                      variant="outline-success">{{selectedAlgo}}
+                            </b-button>
                         </b-input-group>
                     </b-card>
                 </b-collapse>
@@ -90,7 +84,7 @@
     export default {
         data() {
             return {
-                name: 'Sort',
+                name: 'sort',
                 algoTypes: this.getAlgoTypes(),
                 barGraphInput: '',
                 barGraphOutput: '',
@@ -119,25 +113,25 @@
                     this.error = this.SELECT_ERROR;
                     return;
                 }
+                if (this.workingInput === '') {
+                    this.error = this.ERROR;
+                    return;
+                }
                 if (source === "random") {
                     this.barGraphInput = this.formatOutput(this.workingInput);
                     this.performSort(this.workingInput, null);
                     this.showOutput = true;
                     this.error = '';
                 } else {
-                    if (this.workingInput === '') {
-                        this.error = this.ERROR;
-                    } else {
-                        try {
-                            this.workingInput = this.workingInput.split(/[ ,]+/).filter(Boolean).map(Number);
-                            this.barGraphInput = this.formatOutput(this.workingInput);
-                            this.performSort(this.workingInput, null);
-                            this.showOutput = true;
-                            this.error = ''
-                        } catch (e) {
-                            console.log(e);
-                            this.error = this.ERROR
-                        }
+                    try {
+                        this.workingInput = this.workingInput.split(/[ ,]+/).filter(Boolean).map(Number);
+                        this.barGraphInput = this.formatOutput(this.workingInput);
+                        this.performSort(this.workingInput, null);
+                        this.showOutput = true;
+                        this.error = ''
+                    } catch (e) {
+                        console.log(e);
+                        this.error = this.ERROR
                     }
                 }
             },

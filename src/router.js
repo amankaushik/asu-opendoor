@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Sort from '@/views/Sort.vue'
 import Stack from '@/views/Stack.vue'
-import Home from "@/views/Home";
+import Landing from "@/views/Landing";
 
 Vue.use(Router);
 
@@ -20,10 +20,10 @@ export default new Router({
             name: 'stack',
             component: Stack
         },
-        /*{
+        {
             path: '/',
-            name: 'home',
-            component: Home
-        }*/
+            name: 'landing',
+            component: Landing
+        }
     ]
 })
