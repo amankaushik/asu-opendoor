@@ -5,7 +5,9 @@ const ALGOTYPEMAPPING = {
     "Merge Sort": 3,
     "Quick Sort": 4
 };
+const PAIR = {"[": "success", "]": "success", "{": "danger", "}": "danger", "(": "warning", ")": "warning"};
 
 export default {
     ALGOTYPEMAPPING: ALGOTYPEMAPPING,
+    PAIR: PAIR
 }
