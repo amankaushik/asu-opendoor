@@ -4,9 +4,11 @@
             <b-card class="text-center" border-variant="white"
                     img-src="https://s3.amazonaws.com/hamburg-images/asu_university_horiz_rgb_maroongold_600.png"
                     img-top style="max-width: 50rem;">
-                <b-link href="/sort" class="card-link">Sort</b-link>
-                <b-link href="#" class="card-link" disabled>|</b-link>
-                <b-link href="/stack" class="card-link">Stack</b-link>
+                <h1>
+                    <b-badge class="mb-2 mr-sm-2 mb-sm-0" href="/sort" variant="dark">Sort</b-badge>
+                    <b-link href="#" class="mb-2 mr-sm-2 mb-sm-0" disabled>|</b-link>
+                    <b-badge class="mb-2 mr-sm-2 mb-sm-0" href="/stack" variant="dark">Stack</b-badge>
+                </h1>
             </b-card>
         </b-row>
     </b-container>

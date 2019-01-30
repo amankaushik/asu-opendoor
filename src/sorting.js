@@ -8,14 +8,14 @@ function bubbleSort(data) {
             }
         }
     }
-    return data;
+    return Array.from(new Set(data));
 }
 
 function selectionSort(data) {
     for (let bottom = 0; bottom < data.length; bottom++) {
         let midIndex = bottom;
         for (let i = bottom + 1; i < data.length; i++) {
-            if (data[i] < data[midIndex]) {
+            if (Math.abs(data[i]) < Math.abs(data[midIndex])) {
                 midIndex = i;
             }
         }

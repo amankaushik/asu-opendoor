@@ -11,11 +11,11 @@
                         <b-input-group v-if="isRandom">
                             <b-col>
                                 <b-button-group>
+                                    <b-button @click="generateRandomData(5)" :pressed.sync="myToggle">5 Elements
+                                    </b-button>
                                     <b-button @click="generateRandomData(10)" :pressed.sync="myToggle">10 Elements
                                     </b-button>
                                     <b-button @click="generateRandomData(20)" :pressed.sync="myToggle">20 Elements
-                                    </b-button>
-                                    <b-button @click="generateRandomData(50)" :pressed.sync="myToggle">50 Elements
                                     </b-button>
                                 </b-button-group>
                             </b-col>
