@@ -92,6 +92,7 @@
                 error: '',
                 ERROR: "Please enter the correct input",
                 SELECT_ERROR: 'Please select an algorithm',
+                INVALID_INPUT_ERROR: 'Please enter numbers only',
                 selectedAlgo: 'Run Sorting',
                 isRandom: true,
                 showOutput: false,
@@ -125,10 +126,15 @@
                 } else {
                     try {
                         this.workingInput = this.workingInput.split(/[ ,]+/).filter(Boolean).map(Number);
-                        this.barGraphInput = this.formatOutput(this.workingInput);
-                        this.performSort(this.workingInput, null);
-                        this.showOutput = true;
-                        this.error = ''
+                        if (!this.isValidInput(this.workingInput)) {
+                            this.error = this.INVALID_INPUT_ERROR;
+                            this.showOutput = false;
+                        } else {
+                            this.barGraphInput = this.formatOutput(this.workingInput);
+                            this.performSort(this.workingInput, null);
+                            this.showOutput = true;
+                            this.error = ''
+                        }
                     } catch (e) {
                         console.log(e);
                         this.error = this.ERROR
@@ -177,6 +183,14 @@
                 } else { // perform a single type of sort
                     console.log("Single sort");
                 }
+            },
+            isValidInput: function (data) {
+                for (let i = 0; i < data.length; i++) {
+                    if (!isFinite(data[i]) && isNaN(data[i])) {
+                        return false;
+                    }
+                }
+                return true;
             }
         },
     }
